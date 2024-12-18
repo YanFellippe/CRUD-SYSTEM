@@ -49,37 +49,37 @@ Clone este repositório:
 ```
 git clone https://github.com/seuusuario/sistema-crud-java.git
 ```
--Abra o projeto no NetBeans.
+- Abra o projeto no NetBeans.
 
--Configure as dependências, se necessário.
+- Configure as dependências, se necessário.
 
--Execute o projeto pressionando Shift + F6.
+- Execute o projeto pressionando Shift + F6.
 
 ## Estrutura do Projeto
 
--src: Contém os arquivos de código fonte.
+- src: Contém os arquivos de código fonte.
 
--DatabaseConnection.java: Classe para gerenciar a conexão com o banco de dados.
+- DatabaseConnection.java: Classe para gerenciar a conexão com o banco de dados.
 
--Main.java: Classe principal para iniciar a aplicação.
+- Main.java: Classe principal para iniciar a aplicação.
 
--UI: Contém as telas e componentes da interface gráfica.
+- UI: Contém as telas e componentes da interface gráfica.
 
 ## Contribuições
 
 **Contribuições são bem-vindas! Siga os seguintes passos:**
 
--Faça um fork deste repositório.
+- Faça um fork deste repositório.
 
--Crie uma branch para sua feature/bugfix:
+- Crie uma branch para sua feature/bugfix:
 ```
 git checkout -b minha-branch
 ```
--Faça commit das suas modificações:
+- Faça commit das suas modificações:
 ```
 git commit -m "Minha nova feature"
 ```
--Faça o push para o repositório remoto:
+- Faça o push para o repositório remoto:
 ```
 git push origin minha-branch
 ```
