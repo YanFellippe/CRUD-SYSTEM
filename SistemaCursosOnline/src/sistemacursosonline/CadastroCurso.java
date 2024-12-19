@@ -310,33 +310,43 @@ public class CadastroCurso extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnListarMouseClicked
 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
-    String situacaos;
-    id_curso = (table.getValueAt(table.getSelectedRow(), 0)).toString();
-    descricao.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-    turma.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
-    qtdAluno.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-    cargaHoraria.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
-    situacaos = (table.getValueAt(table.getSelectedRow(), 7).toString());
-        if(situacaos.equals("A")){
-            situacao.setSelectedItem("Ativo");
-        }else if(situacaos.equals("I")){
-            situacao.setSelectedItem("Inativo");
-        }
+        String situacaos;
+        id_curso = (table.getValueAt(table.getSelectedRow(), 0)).toString();
+        descricao.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+        turma.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+        qtdAluno.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+        cargaHoraria.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+        situacaos = (table.getValueAt(table.getSelectedRow(), 7).toString());
+            if(situacaos.equals("A")){
+                situacao.setSelectedItem("Ativo");
+            }else if(situacaos.equals("I")){
+                situacao.setSelectedItem("Inativo");
+            }
     }//GEN-LAST:event_tableMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
         try {
         Connection con = BancoClass.conexaoBanco();
-        String sql = "UPDATE curso SET descricao = ?, turma = ?, qtd_alunos = ?, carga_horaria = ?, situacao = ? WHERE id_curso = ?";
+        String sql = "UPDATE curso SET descricao = ?, turma = ?, qtd_alunos = ?, carga_horaria = ?, situacao = ?, data_fim = ? WHERE id_curso = ?";
         PreparedStatement stmt = con.prepareStatement(sql);
         
+        // Configurando os valores
         stmt.setString(1, descricao.getText());
         stmt.setString(2, turma.getText());
         stmt.setString(3, qtdAluno.getText());
         stmt.setString(4, cargaHoraria.getText());
         stmt.setString(5, situação);
-        stmt.setString(6, id_curso);
+        
+        // Formatar a data antes de salvar
+        if (dataFim.getDate() != null) {
+            stmt.setTimestamp(6, new java.sql.Timestamp(dataFim.getDate().getTime()));
+        } else {
+            stmt.setTimestamp(6, null); // Caso a data esteja vazia
+        }
+        
+        stmt.setString(7, id_curso);
 
+        // Executa a atualização
         int rowsAffected = stmt.executeUpdate();
         
         if (rowsAffected > 0) {
@@ -345,6 +355,7 @@ public class CadastroCurso extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(rootPane, "Nenhum curso foi encontrado para edição.");
         }
 
+        // Atualiza a tabela após a edição
         String selectSql = "SELECT * FROM curso ORDER BY id_curso DESC;";
         PreparedStatement selectStmt = con.prepareStatement(selectSql);
         ResultSet rs = selectStmt.executeQuery();
@@ -367,10 +378,10 @@ public class CadastroCurso extends javax.swing.JInternalFrame {
         stmt.close();
         rs.close();
         con.close();
-    } catch (SQLException ex) {
-        Logger.getLogger(CadastroCurso.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(rootPane, "Erro ao editar o curso!");
-    }
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastroCurso.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Erro ao editar o curso!");
+        }
     }//GEN-LAST:event_btnEditarMouseClicked
 
     private void situacaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_situacaoItemStateChanged

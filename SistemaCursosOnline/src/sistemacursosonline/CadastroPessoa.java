@@ -277,8 +277,8 @@ public class CadastroPessoa extends javax.swing.JInternalFrame {
         idade.setText(null);
         telefone.setText(null);
         endereco.setText(null);
-        atividade.setSelectedIndex(-1); 
-        situacao.setSelectedIndex(-1);  
+        atividade.setSelectedIndex(0); 
+        situacao.setSelectedIndex(0);  
 
         stmt.close();
         con.close();
@@ -377,60 +377,38 @@ public class CadastroPessoa extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tableMouseClicked
 
     private void btnRemoverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoverMouseClicked
-    int selectedRow = table.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(rootPane, "Selecione uma pessoa para remover.");
-        return;
-    }
-    int confirm = JOptionPane.showConfirmDialog(rootPane, 
-        "Tem certeza de que deseja remover esta pessoa?", 
-        "Confirmação", 
-        JOptionPane.YES_NO_OPTION);
-    
-    if (confirm == JOptionPane.NO_OPTION) {
-        return;
-    }
-    try {
-        String idPessoa = table.getValueAt(selectedRow, 0).toString();
-        Connection con = BancoClass.conexaoBanco();
-        String sql = "DELETE FROM pessoas WHERE id_pessoa = ?";
-        PreparedStatement stmt = con.prepareStatement(sql);
-        stmt.setString(1, idPessoa);
-
-        int rowsAffected = stmt.executeUpdate();
-        if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(rootPane, "Pessoa removida com sucesso!");
-            DefaultTableModel modeloTabela = (DefaultTableModel) table.getModel();
-            modeloTabela.removeRow(selectedRow);
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Erro ao remover a pessoa.");
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(rootPane, "Selecione uma pessoa para remover.");
+            return;
         }
-        String selectSql = "SELECT * FROM pessoas ORDER BY id_curso DESC;";
-        PreparedStatement selectStmt = con.prepareStatement(selectSql);
-        ResultSet rs = selectStmt.executeQuery();
-        DefaultTableModel modeloTabela = (DefaultTableModel) table.getModel();
-        modeloTabela.setNumRows(0);
 
-        while(rs.next()){
-                Object [] dados = {
-                    rs.getString("id_pessoa"),
-                    rs.getString("cpf_cnpj"),
-                    rs.getString("nome"),
-                    rs.getString("matricula"),
-                    rs.getString("email"),
-                    rs.getString("idade"),
-                    rs.getString("telefone"),
-                    rs.getString("endereco"),
-                    rs.getString("atividade"),
-                    rs.getString("situacao")};
-                modeloTabela.addRow(dados);
+        int confirm = JOptionPane.showConfirmDialog(rootPane, 
+            "Tem certeza de que deseja remover esta pessoa?", 
+            "Confirmação", 
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.NO_OPTION) {
+            return;
+        }
+
+        try (Connection con = BancoClass.conexaoBanco();
+             PreparedStatement stmt = con.prepareStatement("DELETE FROM pessoas WHERE id_pessoa = ?")) {
+
+            String idPessoa = table.getValueAt(selectedRow, 0).toString();
+            stmt.setString(1, idPessoa);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(rootPane, "Pessoa removida com sucesso!");
+                DefaultTableModel modeloTabela = (DefaultTableModel) table.getModel();
+                modeloTabela.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Erro ao remover a pessoa.");
             }
-            stmt.close();
-            rs.close();
-            con.close();
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(rootPane, "Erro ao remover a pessoa: " + nome.getText());
-    }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao remover a pessoa: " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnRemoverMouseClicked
 
     private void btnEditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditarMouseClicked
@@ -486,11 +464,6 @@ public class CadastroPessoa extends javax.swing.JInternalFrame {
         JOptionPane.showMessageDialog(rootPane, nome.getText() + " não pode ser editado(a): " + ex.getMessage());
     }
     }//GEN-LAST:event_btnEditarMouseClicked
-
-    private void setExtendedState(int MAXIMIZED_BOTH) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> atividade;

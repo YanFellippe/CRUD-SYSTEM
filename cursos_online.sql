@@ -57,6 +57,28 @@ CREATE TABLE professor(
     FOREIGN KEY(id_curso) REFERENCES curso(id_curso)
 );
 
+CREATE TABLE curso_matriculas(
+	id_curso_matricula INT PRIMARY KEY AUTO_INCREMENT,
+    situacao CHAR(1),
+    id_pessoa INT NOT NULL,
+    FOREIGN KEY(id_pessoa) REFERENCES pessoas(id_pessoa),
+    id_curso INT NOT NULL,
+    FOREIGN KEY(id_curso) REFERENCES curso(id_curso)
+);
+
+-- Inserindo dados na tabela curso_matriculas
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 1, 1);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 2, 1);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('I', 3, 2);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 4, 3);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 5, 3);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('I', 6, 4);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 7, 4);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 8, 5);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('I', 9, 5);
+INSERT INTO curso_matriculas (situacao, id_pessoa, id_curso) VALUES ('A', 10, 6);
+
+
 INSERT INTO curso (descricao, turma, qtd_alunos, carga_horaria, data_inicio, data_fim, situacao) VALUES 
 ('Programação Web', 'A1', 30, '60 horas', '2024-01-10 08:00:00', '2024-03-10 08:00:00', 'A'),
 ('Data Science', 'B1', 25, '80 horas', '2024-02-15 08:00:00', '2024-04-15 08:00:00', 'A'),
@@ -134,6 +156,25 @@ INSERT INTO pessoas (cpf_cnpj, nome, matricula, email, idade, telefone, endereco
 
 SELECT * FROM curso ORDER BY id_curso DESC;
 SELECT * FROM pessoas ORDER BY id_pessoa DESC;
+SELECT * FROM curso_matriculas ORDER BY id_curso_matricula DESC;
+SELECT * FROM matriculados;
+
+
+-- view para matriculas em cursos
+CREATE VIEW matriculados AS
+SELECT 
+p.nome,
+p.cpf_cnpj,
+p.matricula,
+c.descricao,
+c.turma,
+c.carga_horaria,
+cm.id_pessoa,
+cm.id_curso,
+cm.situacao
+FROM curso_matriculas cm
+INNER JOIN pessoas p ON p.id_pessoa = cm.id_pessoa
+INNER JOIN curso c ON c.id_curso = cm.id_curso;
 
 -- Insert para Testes
 INSERT INTO curso(descricao, turma, qtd_alunos, carga_horaria, data_fim, situacao) VALUES
